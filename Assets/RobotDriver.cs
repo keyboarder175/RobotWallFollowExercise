@@ -38,7 +38,7 @@ public class RobotDriver : MonoBehaviour
         this.transform.Translate(new Vector3(0,0,trans*Time.deltaTime));
         this.transform.Rotate(new Vector3(0,rot*Time.deltaTime,0));
        
-       
+        //Ray and direction to wall
         Vector3 raydirection = Vector3.right;
         Ray theRay = new Ray(transform.position, transform.TransformDirection(raydirection*rayRange));
         Debug.DrawRay(transform.position, transform.TransformDirection(raydirection * rayRange));
@@ -61,25 +61,25 @@ public class RobotDriver : MonoBehaviour
             case State.DriveStraight:
                 setLeftWheelSpeed(5);
                 setRightWheelSpeed(5);
-                if(distance<9.9){
+                if(distance<9.6){
                     currentState = State.ToNearToWall;
                 }
-                if(distance>10.1){
+                if(distance>10.4){
                     currentState = State.ToFarFromWall;
                 }
                 break;
             case State.ToFarFromWall:
-                setLeftWheelSpeed(7);
+                setLeftWheelSpeed(9);
                 setRightWheelSpeed(5);
-                if(distance<10.1){
+                if(distance<10.4){
                     currentState = State.WasToFar;
                     timer = 0;
                 }
                 break;
             case State.ToNearToWall:
                 setLeftWheelSpeed(5);
-                setRightWheelSpeed(7);
-                if(distance>9.9){
+                setRightWheelSpeed(9);
+                if(distance>9.6){
                     currentState = State.WasToNear;
                     timer = 0;
                 }
