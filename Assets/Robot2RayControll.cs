@@ -15,7 +15,7 @@ public class Robot2RayControll : MonoBehaviour
     public Transform frontRayTrans;
     public Transform rearRayTrans;
 
-    enum State {DriveStraight, ToFar, ToNear, InTollerance}
+    enum State {DriveStraight, ToFar, ToNear, InTolleranceFromRight, InTolleranceFromLeft}
 
     State currentState = State.DriveStraight;
 
@@ -109,7 +109,7 @@ public class Robot2RayControll : MonoBehaviour
                 }
                 
                 if(distance<10.4){
-                    currentState = State.InTollerance;
+                    currentState = State.InTolleranceFromLeft;
                 }
                 break;
             case State.ToNear:
@@ -121,22 +121,29 @@ public class Robot2RayControll : MonoBehaviour
                     setRightWheelSpeed(9);
                 }
                 if(distance>9.6){
-                    currentState = State.InTollerance;
+                    currentState = State.InTolleranceFromRight;
                 }
                 break;
-            case State.InTollerance:
-                if(angle<-2){
+            case State.InTolleranceFromLeft:
+                if (Mathf.Abs(angle) > 2){
+                    setLeftWheelSpeed(5);
+                    setRightWheelSpeed(12);
+                }else{
+                    currentState = State.DriveStraight;
+                }
+                break;
+            case State.InTolleranceFromRight:
+                if (Mathf.Abs(angle) > 2)
+                {
                     setLeftWheelSpeed(12);
                     setRightWheelSpeed(5);
-                }else{
-                    if(angle>2){
-                        setLeftWheelSpeed(5);
-                        setRightWheelSpeed(12);
-                    }else{
-                        currentState = State.DriveStraight;
-                    }
+                }
+                else
+                {
+                    currentState = State.DriveStraight;
                 }
                 break;
+
             default:
                 setLeftWheelSpeed(5);
                 setRightWheelSpeed(5);
