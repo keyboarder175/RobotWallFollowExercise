@@ -48,9 +48,11 @@ public class WallAvoidWith2SensorsAndWall : MonoBehaviour
         this.transform.Rotate(new Vector3(0, rot * Time.deltaTime, 0));
 
         Vector3 raydirection = Vector3.forward;
+        
         //right ray
-        Ray frontRay = new Ray(rightRayTrans.position, transform.TransformDirection(raydirection * rayRange));
-        Debug.DrawRay(rightRayTrans.position, transform.TransformDirection(raydirection * rayRange));
+        Vector3 rightRayDirection = Quaternion.Euler(0, 5, 0) *raydirection;
+        Ray frontRay = new Ray(rightRayTrans.position, transform.TransformDirection(rightRayDirection * rayRange));
+        Debug.DrawRay(rightRayTrans.position, transform.TransformDirection(rightRayDirection * rayRange));
 
         if (Physics.Raycast(frontRay, out RaycastHit frontHit, rayRange))
         {
@@ -62,9 +64,9 @@ public class WallAvoidWith2SensorsAndWall : MonoBehaviour
         }
 
         //left ray
-
-        Ray rearRay = new Ray(leftRayTrans.position, transform.TransformDirection(raydirection * rayRange));
-        Debug.DrawRay(leftRayTrans.position, transform.TransformDirection(raydirection * rayRange));
+        Vector3 leftRayDirection = Quaternion.Euler(0, -5, 0) *raydirection;
+        Ray rearRay = new Ray(leftRayTrans.position, transform.TransformDirection(leftRayDirection * rayRange));
+        Debug.DrawRay(leftRayTrans.position, transform.TransformDirection(leftRayDirection * rayRange));
 
         if (Physics.Raycast(rearRay, out RaycastHit readHit, rayRange))
         {
@@ -83,7 +85,7 @@ public class WallAvoidWith2SensorsAndWall : MonoBehaviour
         float sensorDist = sensorVectr.magnitude;
         angle = Mathf.Rad2Deg * Mathf.Atan(distDiff / sensorDist);
 
-        adjustSpeeds(Mathf.Pow(10f * 2.7182818284590452353602874713527f, -(RightDistance / 100f)) , Mathf.Pow(10f * 2.7182818284590452353602874713527f , -(LeftDistance / 100f)));
+        adjustSpeeds(distanceToValue(RightDistance) , distanceToValue(LeftDistance));
 
 
         
@@ -91,12 +93,19 @@ public class WallAvoidWith2SensorsAndWall : MonoBehaviour
 
     }
 
+    float distanceToValue(float distance){
+        return Mathf.Pow(10f * 2.7182818284590452353602874713527f, -(distance / 100f));
+    }
+
     float timer = 0;
 
     void adjustSpeeds(float rightDistValue, float leftDistValue)
-    {
-        setRightWheelSpeed(leftDistValue - rightDistValue+0.6f);
-        //setLeftWheelSpeed(-13f * leftDistValue + 94f * rightDistValue);
-        setLeftWheelSpeed(0.5f);
+    {   Debug.Log("Left: " + leftDistValue + " Right: " + rightDistValue);
+        setRightWheelSpeed(-9f * leftDistValue + 9f * rightDistValue + 0.3f);
+        setLeftWheelSpeed(9f * leftDistValue - 9f * rightDistValue + 0.2f);
+        Debug.Log("LeftWheelSpeed: " + lws + "rightWheelSpeed: " + rws);
+        //setRightWheelSpeed(rightDistValue - leftDistValue + 0.55f);
+        
+        //setLeftWheelSpeed(0.5f);
     }
 }
