@@ -37,8 +37,8 @@ public class WallAvoidWith2SensorsAndWall : MonoBehaviour
         Debug.Log(rot);
     }
 
-    float RightDistance;
-    float LeftDistance;
+    float RightValue;
+    float LeftValue;
 
     // Update is called once per frame
     void Update()
@@ -58,9 +58,13 @@ public class WallAvoidWith2SensorsAndWall : MonoBehaviour
         {
             if (frontHit.collider.tag == "Wall")
             {
-                RightDistance = frontHit.distance;
+                RightValue = distanceToValue(frontHit.distance);
+            }else{
+                RightValue = 0;
             }
 
+        }else{
+            RightValue = 0;
         }
 
         //left ray
@@ -72,20 +76,15 @@ public class WallAvoidWith2SensorsAndWall : MonoBehaviour
         {
             if (readHit.collider.tag == "Wall")
             {
-                LeftDistance = readHit.distance;
+                LeftValue = distanceToValue(readHit.distance);
+            }else{
+                LeftValue = 0;
             }
-
+        }else{
+            LeftValue = 0;
         }
 
-        float distance = (LeftDistance + RightDistance) / 2;
-        float angle;
-
-        float distDiff = LeftDistance - RightDistance;
-        Vector3 sensorVectr = rightRayTrans.position - leftRayTrans.position;
-        float sensorDist = sensorVectr.magnitude;
-        angle = Mathf.Rad2Deg * Mathf.Atan(distDiff / sensorDist);
-
-        adjustSpeeds(distanceToValue(RightDistance) , distanceToValue(LeftDistance));
+        adjustSpeeds(RightValue , LeftValue);
 
 
         
@@ -101,8 +100,8 @@ public class WallAvoidWith2SensorsAndWall : MonoBehaviour
 
     void adjustSpeeds(float rightDistValue, float leftDistValue)
     {   Debug.Log("Left: " + leftDistValue + " Right: " + rightDistValue);
-        setRightWheelSpeed(-9f * leftDistValue + 9f * rightDistValue + 0.3f);
-        setLeftWheelSpeed(9f * leftDistValue - 9f * rightDistValue + 0.2f);
+        setRightWheelSpeed(-9f * leftDistValue + 9f * rightDistValue + 10f);
+        setLeftWheelSpeed(9f * leftDistValue - 9f * rightDistValue + 10f);
         Debug.Log("LeftWheelSpeed: " + lws + "rightWheelSpeed: " + rws);
         //setRightWheelSpeed(rightDistValue - leftDistValue + 0.55f);
         
